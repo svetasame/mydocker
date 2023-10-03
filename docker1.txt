@@ -1,0 +1,178 @@
+1) пример файловой изоляции
+
+svetasame@of-ecom01:~$ cd lws/
+svetasame@of-ecom01:~/lws$ mkdir testfolder
+svetasame@of-ecom01:~/lws$ ls
+GB  testfolder
+svetasame@of-ecom01:~/lws$ mkdir testfolder/bin
+svetasame@of-ecom01:~/lws$ cd testfolder/
+svetasame@of-ecom01:~/lws/testfolder$ ls
+bin
+svetasame@of-ecom01:~/lws/testfolder$ cd ..
+svetasame@of-ecom01:~/lws$ cp /bin/bash testfolder/bin
+svetasame@of-ecom01:~/lws$ cd testfolder/bin
+svetasame@of-ecom01:~/lws/testfolder/bin$ ls
+bash
+svetasame@of-ecom01:~/lws/testfolder/bin$ ldd /bin/bash
+        linux-vdso.so.1 (0x00007fff4bdf7000)
+        libtinfo.so.6 => /lib/x86_64-linux-gnu/libtinfo.so.6 (0x00007f616eff2000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f616edca000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f616f18b000)
+svetasame@of-ecom01:~/lws/testfolder/bin$ cd ..
+svetasame@of-ecom01:~/lws/testfolder$ mkdir lib/
+svetasame@of-ecom01:~/lws/testfolder$ mkdir lib64/
+svetasame@of-ecom01:~/lws/testfolder$ ll
+total 20
+drwxr-xr-x 5 svetasame svetasame 4096 Oct  3 13:11 ./
+drwxr-xr-x 4 svetasame svetasame 4096 Oct  3 13:03 ../
+drwxr-xr-x 2 svetasame svetasame 4096 Oct  3 13:06 bin/
+drwxr-xr-x 2 svetasame svetasame 4096 Oct  3 13:10 lib/
+drwxr-xr-x 2 svetasame svetasame 4096 Oct  3 13:11 lib64/
+svetasame@of-ecom01:~/lws/testfolder$ cp /lib/x86_64-linux-gnu/libtinfo.so.6 lib/
+svetasame@of-ecom01:~/lws/testfolder$ cp /lib/x86_64-linux-gnu/libc.so.6 lib/
+svetasame@of-ecom01:~/lws/testfolder$ cp /lib64/ld-linux-x86-64.so.2 lib64/
+svetasame@of-ecom01:~/lws/testfolder$ cd ..
+svetasame@of-ecom01:~/lws$ sudo chroot testfolder/
+bash-5.1#
+bash-5.1# exit
+exit
+svetasame@of-ecom01:~/lws$
+
+
+2) пример изоляции по ip
+
+svetasame@of-ecom01:~/lws$ ps aux | head
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   1056   632 ?        Sl   Sep27   0:00 /init
+root        14  0.0  0.0   1336   432 ?        S    Sep27   0:00 /init
+root      1217  0.0  0.0   6764  4708 ?        Ss   Sep27   0:20 /usr/sbin/apache2 -k start
+www-data  1220  0.0  0.0 1998172 12412 ?       Sl   Sep27   0:00 /usr/sbin/apache2 -k start
+www-data  1221  0.0  0.0 1998228 10368 ?       Sl   Sep27   0:00 /usr/sbin/apache2 -k start
+root      1377  0.0  0.0  55316  6324 ?        Ss   Sep27   0:00 nginx: master process /usr/sbin/nginx
+www-data  8721  0.0  0.0  55800  6468 ?        S    Sep27   0:00 nginx: worker process
+www-data  8722  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8723  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+svetasame@of-ecom01:~/lws$ sudo ip netns add testtns
+[sudo] password for svetasame:
+svetasame@of-ecom01:~/lws$  ip
+Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }
+       ip [ -force ] -batch filename
+where  OBJECT := { address | addrlabel | fou | help | ila | ioam | l2tp | link |
+                   macsec | maddress | monitor | mptcp | mroute | mrule |
+                   neighbor | neighbour | netconf | netns | nexthop | ntable |
+                   ntbl | route | rule | sr | tap | tcpmetrics |
+                   token | tunnel | tuntap | vrf | xfrm }
+       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |
+                    -h[uman-readable] | -iec | -j[son] | -p[retty] |
+                    -f[amily] { inet | inet6 | mpls | bridge | link } |
+                    -4 | -6 | -M | -B | -0 |
+                    -l[oops] { maximum-addr-flush-attempts } | -br[ief] |
+                    -o[neline] | -t[imestamp] | -ts[hort] | -b[atch] [filename] |
+                    -rc[vbuf] [size] | -n[etns] name | -N[umeric] | -a[ll] |
+                    -c[olor]}
+svetasame@of-ecom01:~/lws$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: bond0: <BROADCAST,MULTICAST,MASTER> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 0e:11:c5:2d:21:8e brd ff:ff:ff:ff:ff:ff
+3: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 72:88:43:78:36:d3 brd ff:ff:ff:ff:ff:ff
+4: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 00:15:5d:6b:99:58 brd ff:ff:ff:ff:ff:ff
+    inet 172.22.232.57/20 brd 172.22.239.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::215:5dff:fe6b:9958/64 scope link
+       valid_lft forever preferred_lft forever
+5: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+6: sit0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/sit 0.0.0.0 brd 0.0.0.0
+svetasame@of-ecom01:~/lws$ sudo ip netns exec testns bash
+Cannot open network namespace "testns": No such file or directory
+svetasame@of-ecom01:~/lws$ sudo ip netns exec testtns bash
+root@of-ecom01:/home/svetasame/lws# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+3: sit0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/sit 0.0.0.0 brd 0.0.0.0
+root@of-ecom01:/home/svetasame/lws# ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   1056   632 ?        Sl   Sep27   0:00 /init
+root        14  0.0  0.0   1336   432 ?        S    Sep27   0:00 /init
+root      1217  0.0  0.0   6764  4708 ?        Ss   Sep27   0:20 /usr/sbin/apache2 -k start
+www-data  1220  0.0  0.0 1998172 12412 ?       Sl   Sep27   0:00 /usr/sbin/apache2 -k start
+www-data  1221  0.0  0.0 1998228 10368 ?       Sl   Sep27   0:00 /usr/sbin/apache2 -k start
+root      1377  0.0  0.0  55316  6324 ?        Ss   Sep27   0:00 nginx: master process /usr/sbin/nginx
+www-data  8721  0.0  0.0  55800  6468 ?        S    Sep27   0:00 nginx: worker process
+www-data  8722  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8723  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8724  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8725  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8726  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8727  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8728  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8729  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8730  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8731  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+www-data  8732  0.0  0.0  55800  5364 ?        S    Sep27   0:00 nginx: worker process
+mysql     9516  0.0  0.0   2884  1932 ?        S    Sep27   0:00 /bin/sh /usr/bin/mysqld_safe
+mysql     9663  0.5  2.8 2372536 364952 ?      Sl   Sep27  42:57 /usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysqroot     11896  0.0  0.0   1404   500 ?        Ss   13:02   0:00 /init
+root     11897  0.0  0.0   1404   500 ?        S    13:02   0:00 /init
+svetasa+ 11898  0.0  0.0   6428  5392 pts/0    Ss   13:02   0:00 -bash
+root     12015  0.0  0.0   8912  5520 pts/0    S+   13:48   0:00 sudo ip netns exec testtns bash
+root     12016  0.0  0.0   8912   880 pts/1    Ss   13:48   0:00 sudo ip netns exec testtns bash
+root     12017  0.0  0.0   5040  4064 pts/1    S    13:48   0:00 bash
+root     12024  0.0  0.0   7476  3140 pts/1    R+   13:49   0:00 ps aux
+root@of-ecom01:/home/svetasame/lws# exit
+exit
+svetasame@of-ecom01:~/lws$  ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: bond0: <BROADCAST,MULTICAST,MASTER> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 0e:11:c5:2d:21:8e brd ff:ff:ff:ff:ff:ff
+3: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 72:88:43:78:36:d3 brd ff:ff:ff:ff:ff:ff
+4: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 00:15:5d:6b:99:58 brd ff:ff:ff:ff:ff:ff
+    inet 172.22.232.57/20 brd 172.22.239.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::215:5dff:fe6b:9958/64 scope link
+       valid_lft forever preferred_lft forever
+5: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+6: sit0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/sit 0.0.0.0 brd 0.0.0.0
+
+
+
+3) пример полной изоляции по процессам и сетям
+
+svetasame@of-ecom01:~/lws$ sudo unshare --net --pid --fork --mount-proc /bin/bash
+root@of-ecom01:/home/svetasame/lws# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+3: sit0@NONE: <NOARP> mtu 1480 qdisc noop state DOWN group default qlen 1000
+    link/sit 0.0.0.0 brd 0.0.0.0
+root@of-ecom01:/home/svetasame/lws# ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   5040  4096 pts/1    S    13:58   0:00 /bin/bash
+root         8  0.0  0.0   7476  3240 pts/1    R+   13:59   0:00 ps aux
+root@of-ecom01:/home/svetasame/lws# ls
+GB  testfolder
+root@of-ecom01:/home/svetasame/lws# ls /
+Docker  boot  etc   init  lib32  libx32      media  nginx_1.18.0-6ubuntu14.4_amd64.deb  proc  run   snap  sys  usr
+bin     dev   home  lib   lib64  lost+found  mnt    opt                                 root  sbin  srv   tmp  var
+root@of-ecom01:/home/svetasame/lws#
+
