@@ -1,0 +1,682 @@
+svetasame@of-ecom01:~$ sudo apt update
+[sudo] password for svetasame:
+Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [109 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [1058 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [233 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 c-n-f Metadata [15.6 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [974 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [157 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [989 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [24.3 kB]
+Fetched 3788 kB in 5s (785 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+svetasame@of-ecom01:~$ sudo apt install apt-transport-https ca-certificates curl software-properties-common
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+ca-certificates is already the newest version (20230311ubuntu0.22.04.1).
+ca-certificates set to manually installed.
+curl is already the newest version (7.81.0-1ubuntu1.13).
+software-properties-common is already the newest version (0.99.22.7).
+software-properties-common set to manually installed.
+The following NEW packages will be installed:
+  apt-transport-https
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 1510 B of archives.
+After this operation, 169 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 apt-transport-https all 2.4.10 [1510 B]
+Fetched 1510 B in 1s (1778 B/s)
+Selecting previously unselected package apt-transport-https.
+(Reading database ... 28129 files and directories currently installed.)
+Preparing to unpack .../apt-transport-https_2.4.10_all.deb ...
+Unpacking apt-transport-https (2.4.10) ...
+Setting up apt-transport-https (2.4.10) ...
+svetasame@of-ecom01:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+svetasame@of-ecom01:~$ echo "deb [signed-by=/usr/share/keyring/docker-archivekeyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+[sudo] password for svetasame:
+svetasame@of-ecom01:~$ sudo apt update
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
+Get:3 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Get:4 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Err:3 https://download.docker.com/linux/ubuntu jammy InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [109 kB]
+Reading package lists... Done
+W: GPG error: https://download.docker.com/linux/ubuntu jammy InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+E: The repository 'https://download.docker.com/linux/ubuntu jammy InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+svetasame@of-ecom01:~$ sudo chmod a+r /usr/share/keyrings/docker-archive-keyring.gpg
+svetasame@of-ecom01:~$ sudo apt update
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Get:5 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Err:5 https://download.docker.com/linux/ubuntu jammy InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+Reading package lists... Done
+W: GPG error: https://download.docker.com/linux/ubuntu jammy InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+E: The repository 'https://download.docker.com/linux/ubuntu jammy InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+svetasame@of-ecom01:~$ strace -f apt update 2>&1|grep key|grep docker-archive-keyring
+svetasame@of-ecom01:~$ sudo apt update
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:3 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Err:3 https://download.docker.com/linux/ubuntu jammy InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Reading package lists... Done
+W: GPG error: https://download.docker.com/linux/ubuntu jammy InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+E: The repository 'https://download.docker.com/linux/ubuntu jammy InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+svetasame@of-ecom01:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+OK
+svetasame@of-ecom01:~$ sudo apt update
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Get:5 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Err:5 https://download.docker.com/linux/ubuntu jammy InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+Reading package lists... Done
+W: GPG error: https://download.docker.com/linux/ubuntu jammy InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+E: The repository 'https://download.docker.com/linux/ubuntu jammy InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+svetasame@of-ecom01:~$ sudo mkdir -p /etc/apt/keyrings
+svetasame@of-ecom01:~$ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+
+svetasame@of-ecom01:~$
+svetasame@of-ecom01:~$ sudo chmod a+r /etc/apt/keyrings/docker.gpg
+svetasame@of-ecom01:~$ sudo apt update
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Get:2 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Err:2 https://download.docker.com/linux/ubuntu jammy InRelease
+  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Reading package lists... Done
+W: GPG error: https://download.docker.com/linux/ubuntu jammy InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+E: The repository 'https://download.docker.com/linux/ubuntu jammy InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+svetasame@of-ecom01:~$ echo \
+ "deb [>   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+>   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+svetasame@of-ecom01:~$ sudo apt update
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Get:3 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:5 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Get:6 https://download.docker.com/linux/ubuntu jammy/stable amd64 Packages [22.2 kB]
+Fetched 71.0 kB in 2s (42.3 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+svetasame@of-ecom01:~$ sudo apt install docker-ce
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  ubuntu-fan
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  containerd.io dbus-user-session docker-buildx-plugin docker-ce-cli docker-ce-rootless-extras docker-compose-plugin libltdl7
+  libslirp0 slirp4netns
+Suggested packages:
+  aufs-tools cgroupfs-mount | cgroup-lite
+The following packages will be REMOVED:
+  containerd docker.io runc
+The following NEW packages will be installed:
+  containerd.io dbus-user-session docker-buildx-plugin docker-ce docker-ce-cli docker-ce-rootless-extras docker-compose-plugin
+  libltdl7 libslirp0 slirp4netns
+0 upgraded, 10 newly installed, 3 to remove and 0 not upgraded.
+Need to get 114 MB of archives.
+After this operation, 144 MB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 https://download.docker.com/linux/ubuntu jammy/stable amd64 containerd.io amd64 1.6.24-1 [28.6 MB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dbus-user-session amd64 1.12.20-2ubuntu4.1 [9442 B]
+Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libltdl7 amd64 2.4.6-15build2 [39.6 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy/main amd64 libslirp0 amd64 4.6.1-1build1 [61.5 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy/universe amd64 slirp4netns amd64 1.0.1-2 [28.2 kB]
+Get:6 https://download.docker.com/linux/ubuntu jammy/stable amd64 docker-buildx-plugin amd64 0.11.2-1~ubuntu.22.04~jammy [28.2 MB]
+Get:7 https://download.docker.com/linux/ubuntu jammy/stable amd64 docker-ce-cli amd64 5:24.0.6-1~ubuntu.22.04~jammy [13.3 MB]
+Get:8 https://download.docker.com/linux/ubuntu jammy/stable amd64 docker-ce amd64 5:24.0.6-1~ubuntu.22.04~jammy [22.6 MB]
+Get:9 https://download.docker.com/linux/ubuntu jammy/stable amd64 docker-ce-rootless-extras amd64 5:24.0.6-1~ubuntu.22.04~jammy [9032 kB]
+Get:10 https://download.docker.com/linux/ubuntu jammy/stable amd64 docker-compose-plugin amd64 2.21.0-1~ubuntu.22.04~jammy [11.9 MB]Fetched 114 MB in 15s (7767 kB/s)
+(Reading database ... 28133 files and directories currently installed.)
+Removing docker.io (24.0.5-0ubuntu1~22.04.1) ...
+'/usr/share/docker.io/contrib/nuke-graph-directory.sh' -> '/var/lib/docker/nuke-graph-directory.sh'
+invoke-rc.d: unknown initscript, /etc/init.d/docker not found.
+invoke-rc.d: could not determine current runlevel
+Removing containerd (1.7.2-0ubuntu1~22.04.1) ...
+Removing runc (1.1.7-0ubuntu1~22.04.1) ...
+Selecting previously unselected package containerd.io.
+(Reading database ... 27861 files and directories currently installed.)
+Preparing to unpack .../0-containerd.io_1.6.24-1_amd64.deb ...
+Unpacking containerd.io (1.6.24-1) ...
+Selecting previously unselected package dbus-user-session.
+Preparing to unpack .../1-dbus-user-session_1.12.20-2ubuntu4.1_amd64.deb ...
+Unpacking dbus-user-session (1.12.20-2ubuntu4.1) ...
+Selecting previously unselected package docker-buildx-plugin.
+Preparing to unpack .../2-docker-buildx-plugin_0.11.2-1~ubuntu.22.04~jammy_amd64.deb ...
+Unpacking docker-buildx-plugin (0.11.2-1~ubuntu.22.04~jammy) ...
+Selecting previously unselected package docker-ce-cli.
+Preparing to unpack .../3-docker-ce-cli_5%3a24.0.6-1~ubuntu.22.04~jammy_amd64.deb ...
+Unpacking docker-ce-cli (5:24.0.6-1~ubuntu.22.04~jammy) ...
+Selecting previously unselected package docker-ce.
+Preparing to unpack .../4-docker-ce_5%3a24.0.6-1~ubuntu.22.04~jammy_amd64.deb ...
+Unpacking docker-ce (5:24.0.6-1~ubuntu.22.04~jammy) ...
+Selecting previously unselected package docker-ce-rootless-extras.
+Preparing to unpack .../5-docker-ce-rootless-extras_5%3a24.0.6-1~ubuntu.22.04~jammy_amd64.deb ...
+Unpacking docker-ce-rootless-extras (5:24.0.6-1~ubuntu.22.04~jammy) ...
+Selecting previously unselected package docker-compose-plugin.
+Preparing to unpack .../6-docker-compose-plugin_2.21.0-1~ubuntu.22.04~jammy_amd64.deb ...
+Unpacking docker-compose-plugin (2.21.0-1~ubuntu.22.04~jammy) ...
+Selecting previously unselected package libltdl7:amd64.
+Preparing to unpack .../7-libltdl7_2.4.6-15build2_amd64.deb ...
+Unpacking libltdl7:amd64 (2.4.6-15build2) ...
+Selecting previously unselected package libslirp0:amd64.
+Preparing to unpack .../8-libslirp0_4.6.1-1build1_amd64.deb ...
+Unpacking libslirp0:amd64 (4.6.1-1build1) ...
+Selecting previously unselected package slirp4netns.
+Preparing to unpack .../9-slirp4netns_1.0.1-2_amd64.deb ...
+Unpacking slirp4netns (1.0.1-2) ...
+Setting up dbus-user-session (1.12.20-2ubuntu4.1) ...
+Setting up docker-buildx-plugin (0.11.2-1~ubuntu.22.04~jammy) ...
+Setting up containerd.io (1.6.24-1) ...
+Setting up docker-compose-plugin (2.21.0-1~ubuntu.22.04~jammy) ...
+Setting up libltdl7:amd64 (2.4.6-15build2) ...
+Setting up docker-ce-cli (5:24.0.6-1~ubuntu.22.04~jammy) ...
+Setting up libslirp0:amd64 (4.6.1-1build1) ...
+Setting up docker-ce-rootless-extras (5:24.0.6-1~ubuntu.22.04~jammy) ...
+Setting up slirp4netns (1.0.1-2) ...
+Setting up docker-ce (5:24.0.6-1~ubuntu.22.04~jammy) ...
+invoke-rc.d: could not determine current runlevel
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.4) ...
+svetasame@of-ecom01:~$ docker --version
+Docker version 24.0.6, build ed223bc
+svetasame@of-ecom01:~$ sudo usermod -aG docker $USER
+svetasame@of-ecom01:~$ newgrp docker
+svetasame@of-ecom01:~$ docker run docker/whalesay cowsay Hello,Docker!
+Unable to find image 'docker/whalesay:latest' locally
+latest: Pulling from docker/whalesay
+Image docker.io/docker/whalesay:latest uses outdated schema1 manifest format. Please upgrade to a schema2 image for better future compatibility. More information at https://docs.docker.com/registry/spec/deprecated-schema-v1/
+e190868d63f8: Pull complete
+909cd34c6fd7: Pull complete
+0b9bfabab7c1: Pull complete
+a3ed95caeb02: Pull complete
+00bf65475aba: Pull complete
+c57b6bcc83e3: Pull complete
+8978f6879e2f: Pull complete
+8eed3712d2cf: Pull complete
+Digest: sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b
+Status: Downloaded newer image for docker/whalesay:latest
+ _______________
+< Hello,Docker! >
+ ---------------
+    \
+     \
+      \
+                    ##        .
+              ## ## ##       ==
+           ## ## ## ##      ===
+       /""""""""""""""""___/ ===
+  ~~~ {~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~
+       \______ o          __/
+        \    \        __/
+          \____\______/
+svetasame@of-ecom01:~$ docker images
+REPOSITORY                           TAG           IMAGE ID       CREATED         SIZE
+git.ovita.ru:5050/web/ovita.ru/php   7.4-9         a4287b5817c3   3 weeks ago     463MB
+mysql                                8.0-oracle    8ca55c632ed6   3 weeks ago     577MB
+getmeili/meilisearch                 v1.3.2        466cc7df7545   6 weeks ago     125MB
+traefik                              v2.10         2ae1addee1b2   2 months ago    147MB
+memcached                            1.6-alpine    acba9e0d1373   2 months ago    9.71MB
+nginx                                1.23-alpine   8e75cbc5b25c   6 months ago    41MB
+mcuadros/ofelia                      v0.3.7        b9210dd9825e   9 months ago    21.9MB
+dockage/mailcatcher                  0.8.2         b7d83f7683d7   14 months ago   41.9MB
+macbre/sphinxsearch                  3.4.1         87559c534e40   2 years ago     328MB
+docker/whalesay                      latest        6b362a9f73eb   8 years ago     247MB
+svetasame@of-ecom01:~$ docker run docker/whalesay cowsay -f elephant "Hello,Docker!"
+ _______________
+< Hello,Docker! >
+ ---------------
+ \     /\  ___  /\
+  \   // \/   \/ \\
+     ((    O O    ))
+      \\ /     \ //
+       \/  | |  \/
+        |  | |  |
+        |  | |  |
+        |   o   |
+        | |   | |
+        |m|   |m|
+svetasame@of-ecom01:~$ docker images
+REPOSITORY                           TAG           IMAGE ID       CREATED         SIZE
+git.ovita.ru:5050/web/ovita.ru/php   7.4-9         a4287b5817c3   3 weeks ago     463MB
+mysql                                8.0-oracle    8ca55c632ed6   3 weeks ago     577MB
+getmeili/meilisearch                 v1.3.2        466cc7df7545   6 weeks ago     125MB
+traefik                              v2.10         2ae1addee1b2   2 months ago    147MB
+memcached                            1.6-alpine    acba9e0d1373   2 months ago    9.71MB
+nginx                                1.23-alpine   8e75cbc5b25c   6 months ago    41MB
+mcuadros/ofelia                      v0.3.7        b9210dd9825e   9 months ago    21.9MB
+dockage/mailcatcher                  0.8.2         b7d83f7683d7   14 months ago   41.9MB
+macbre/sphinxsearch                  3.4.1         87559c534e40   2 years ago     328MB
+docker/whalesay                      latest        6b362a9f73eb   8 years ago     247MB
+svetasame@of-ecom01:~$ docker rmi 6b362a9f73eb
+Error response from daemon: conflict: unable to delete 6b362a9f73eb (must be forced) - image is being used by stopped container 92d25eaed38e
+svetasame@of-ecom01:~$ docker ps -a
+CONTAINER ID   IMAGE                                      COMMAND                  CREATED          STATUS                      PORTS                                                                                    NAMES
+6f6de2961b3a   docker/whalesay                            "cowsay -f elephant …"   5 minutes ago    Exited (0) 5 minutes ago                                                                                             nostalgic_dhawan
+92d25eaed38e   docker/whalesay                            "cowsay Hello,Docker!"   14 minutes ago   Exited (0) 14 minutes ago                                                                                            jolly_burnell
+7f68677478f1   git.ovita.ru:5050/web/ovita.ru/php:7.4-9   "docker-php-entrypoi…"   3 weeks ago      Up About an hour            9000/tcp                                                                                 ovitaru-app-1
+597ab12e7276   mcuadros/ofelia:v0.3.7                     "/usr/bin/ofelia dae…"   3 weeks ago      Up About an hour                                                                                                     ovitaru-crontab-1
+137cfb28fa2a   macbre/sphinxsearch:3.4.1                  "/bin/sh -c 'searchd…"   3 weeks ago      Up About an hour            36307/tcp                                                                                ovitaru-sphinx-1
+b7f33b9718b8   nginx:1.23-alpine                          "/docker-entrypoint.…"   3 weeks ago      Up About an hour            80/tcp                                                                                   ovitaru-nginx-1
+6337e0f064b1   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up About an hour            11211/tcp                                                                                ovitaru-memcached-sms-1
+d58d4db47853   getmeili/meilisearch:v1.3.2                "tini -- /bin/sh -c …"   3 weeks ago      Up About an hour            7700/tcp                                                                                 ovitaru-meilisearch-1
+d8d8d33957e3   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up About an hour            11211/tcp                                                                                ovitaru-memcached-1
+d1d835b48fc7   dockage/mailcatcher:0.8.2                  "entrypoint --smtp-p…"   3 weeks ago      Up About an hour            1025/tcp, 1080/tcp                                                                       ovitaru-mailer-1
+70b5b2d21a52   mysql:8.0-oracle                           "docker-entrypoint.s…"   3 weeks ago      Up About an hour            3306/tcp, 33060/tcp                                                                      ovitaru-mysql-1
+d2a5ae710f07   traefik:v2.10                              "/entrypoint.sh --lo…"   3 weeks ago      Up About an hour            0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:5671->5671/tcp, 0.0.0.0:443->443/udp   traefik-local-traefik-1
+svetasame@of-ecom01:~$
+svetasame@of-ecom01:~$ docker stop 6b362a9f73eb 92d25eaed38e
+92d25eaed38e
+Error response from daemon: No such container: 6b362a9f73eb
+svetasame@of-ecom01:~$ docker stop 6b362a9f73eb
+Error response from daemon: No such container: 6b362a9f73eb
+svetasame@of-ecom01:~$ docker stop 6b362a9f73eb
+Error response from daemon: No such container: 6b362a9f73eb
+svetasame@of-ecom01:~$ docker stop 92d25eaed38у
+Error response from daemon: No such container: 92d25eaed38у
+svetasame@of-ecom01:~$ docker stop 92d25eaed38e
+92d25eaed38e
+svetasame@of-ecom01:~$ docker stop 6f6de2961b3a
+6f6de2961b3a
+svetasame@of-ecom01:~$ docker rmi 6b362a9f73eb
+Error response from daemon: conflict: unable to delete 6b362a9f73eb (must be forced) - image is being used by stopped container 92d25eaed38e
+svetasame@of-ecom01:~$ docker rmi 6b362a9f73eb --force
+Untagged: docker/whalesay:latest
+Untagged: docker/whalesay@sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b
+Deleted: sha256:6b362a9f73eb8c33b48c95f4fcce1b6637fc25646728cf7fb0679b2da273c3f4
+svetasame@of-ecom01:~$ docker images
+REPOSITORY                           TAG           IMAGE ID       CREATED         SIZE
+git.ovita.ru:5050/web/ovita.ru/php   7.4-9         a4287b5817c3   3 weeks ago     463MB
+mysql                                8.0-oracle    8ca55c632ed6   3 weeks ago     577MB
+getmeili/meilisearch                 v1.3.2        466cc7df7545   6 weeks ago     125MB
+traefik                              v2.10         2ae1addee1b2   2 months ago    147MB
+memcached                            1.6-alpine    acba9e0d1373   2 months ago    9.71MB
+nginx                                1.23-alpine   8e75cbc5b25c   6 months ago    41MB
+mcuadros/ofelia                      v0.3.7        b9210dd9825e   9 months ago    21.9MB
+dockage/mailcatcher                  0.8.2         b7d83f7683d7   14 months ago   41.9MB
+macbre/sphinxsearch                  3.4.1         87559c534e40   2 years ago     328MB
+svetasame@of-ecom01:~$ docker run -it -h GB --name gb-test ubuntu:22.10
+Unable to find image 'ubuntu:22.10' locally
+22.10: Pulling from library/ubuntu
+3ad6ea492c35: Pull complete
+Digest: sha256:e322f4808315c387868a9135beeb11435b5b83130a8599fd7d0014452c34f489
+Status: Downloaded newer image for ubuntu:22.10
+root@GB:/#
+root@GB:/#
+root@GB:/# ls -l
+total 48
+lrwxrwxrwx   1 root root    7 Jun 24 02:02 bin -> usr/bin
+drwxr-xr-x   2 root root 4096 Oct 17  2022 boot
+drwxr-xr-x   5 root root  360 Oct  9 06:50 dev
+drwxr-xr-x   1 root root 4096 Oct  9 06:50 etc
+drwxr-xr-x   2 root root 4096 Oct 17  2022 home
+lrwxrwxrwx   1 root root    7 Jun 24 02:02 lib -> usr/lib
+lrwxrwxrwx   1 root root    9 Jun 24 02:02 lib32 -> usr/lib32
+lrwxrwxrwx   1 root root    9 Jun 24 02:02 lib64 -> usr/lib64
+lrwxrwxrwx   1 root root   10 Jun 24 02:02 libx32 -> usr/libx32
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 media
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 mnt
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 opt
+dr-xr-xr-x 318 root root    0 Oct  9 06:50 proc
+drwx------   2 root root 4096 Jun 24 02:05 root
+drwxr-xr-x   5 root root 4096 Jun 24 02:05 run
+lrwxrwxrwx   1 root root    8 Jun 24 02:02 sbin -> usr/sbin
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 srv
+dr-xr-xr-x  11 root root    0 Oct  9 06:50 sys
+drwxrwxrwt   2 root root 4096 Jun 24 02:05 tmp
+drwxr-xr-x  14 root root 4096 Jun 24 02:02 usr
+drwxr-xr-x  11 root root 4096 Jun 24 02:05 var
+root@GB:/# ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504  3776 pts/0    Ss   06:50   0:00 /bin/bash
+root        10  0.0  0.0   6860  1624 pts/0    R+   06:54   0:00 ps aux
+root@GB:/# mkdir /example
+root@GB:/# ls -l
+total 52
+lrwxrwxrwx   1 root root    7 Jun 24 02:02 bin -> usr/bin
+drwxr-xr-x   2 root root 4096 Oct 17  2022 boot
+drwxr-xr-x   5 root root  360 Oct  9 06:50 dev
+drwxr-xr-x   1 root root 4096 Oct  9 06:50 etc
+drwxr-xr-x   2 root root 4096 Oct  9 06:54 example
+drwxr-xr-x   2 root root 4096 Oct 17  2022 home
+lrwxrwxrwx   1 root root    7 Jun 24 02:02 lib -> usr/lib
+lrwxrwxrwx   1 root root    9 Jun 24 02:02 lib32 -> usr/lib32
+lrwxrwxrwx   1 root root    9 Jun 24 02:02 lib64 -> usr/lib64
+lrwxrwxrwx   1 root root   10 Jun 24 02:02 libx32 -> usr/libx32
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 media
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 mnt
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 opt
+dr-xr-xr-x 318 root root    0 Oct  9 06:50 proc
+drwx------   2 root root 4096 Jun 24 02:05 root
+drwxr-xr-x   5 root root 4096 Jun 24 02:05 run
+lrwxrwxrwx   1 root root    8 Jun 24 02:02 sbin -> usr/sbin
+drwxr-xr-x   2 root root 4096 Jun 24 02:02 srv
+dr-xr-xr-x  11 root root    0 Oct  9 06:50 sys
+drwxrwxrwt   2 root root 4096 Jun 24 02:05 tmp
+drwxr-xr-x  14 root root 4096 Jun 24 02:02 usr
+drwxr-xr-x  11 root root 4096 Jun 24 02:05 var
+root@GB:/# cd /example
+root@GB:/example# ll
+total 8
+drwxr-xr-x 2 root root 4096 Oct  9 06:54 ./
+drwxr-xr-x 1 root root 4096 Oct  9 06:54 ../
+root@GB:/example# touch /example/passwords.txt
+root@GB:/example# ls
+passwords.txt
+root@GB:/example# echo "123test" >> /example/passwords.txt
+root@GB:/example# cat passwords.txt
+123test
+root@GB:/example# ip -a
+bash: ip: command not found
+root@GB:/example# ip a
+bash: ip: command not found
+root@GB:/example# exit
+exit
+svetasame@of-ecom01:~$ docker ps -a
+CONTAINER ID   IMAGE                                      COMMAND                  CREATED          STATUS                       PORTS                                                                                    NAMES
+89f628aab077   ubuntu:22.10                               "/bin/bash"              7 minutes ago    Exited (127) 8 seconds ago                                                                                            gb-test
+6f6de2961b3a   6b362a9f73eb                               "cowsay -f elephant …"   29 minutes ago   Exited (0) 29 minutes ago                                                                                             nostalgic_dhawan
+92d25eaed38e   6b362a9f73eb                               "cowsay Hello,Docker!"   38 minutes ago   Exited (0) 38 minutes ago                                                                                             jolly_burnell
+7f68677478f1   git.ovita.ru:5050/web/ovita.ru/php:7.4-9   "docker-php-entrypoi…"   3 weeks ago      Up 2 hours                   9000/tcp                                                                                 ovitaru-app-1
+597ab12e7276   mcuadros/ofelia:v0.3.7                     "/usr/bin/ofelia dae…"   3 weeks ago      Up 2 hours                                                                                                            ovitaru-crontab-1
+137cfb28fa2a   macbre/sphinxsearch:3.4.1                  "/bin/sh -c 'searchd…"   3 weeks ago      Up 2 hours                   36307/tcp                                                                                ovitaru-sphinx-1
+b7f33b9718b8   nginx:1.23-alpine                          "/docker-entrypoint.…"   3 weeks ago      Up 2 hours                   80/tcp                                                                                   ovitaru-nginx-1
+6337e0f064b1   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                   11211/tcp                                                                                ovitaru-memcached-sms-1
+d58d4db47853   getmeili/meilisearch:v1.3.2                "tini -- /bin/sh -c …"   3 weeks ago      Up 2 hours                   7700/tcp                                                                                 ovitaru-meilisearch-1
+d8d8d33957e3   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                   11211/tcp                                                                                ovitaru-memcached-1
+d1d835b48fc7   dockage/mailcatcher:0.8.2                  "entrypoint --smtp-p…"   3 weeks ago      Up 2 hours                   1025/tcp, 1080/tcp                                                                       ovitaru-mailer-1
+70b5b2d21a52   mysql:8.0-oracle                           "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                   3306/tcp, 33060/tcp                                                                      ovitaru-mysql-1
+d2a5ae710f07   traefik:v2.10                              "/entrypoint.sh --lo…"   3 weeks ago      Up 2 hours                   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:5671->5671/tcp, 0.0.0.0:443->443/udp   traefik-local-traefik-1
+svetasame@of-ecom01:~$ docker stop gb-test
+gb-test
+svetasame@of-ecom01:~$ docker ps -a
+CONTAINER ID   IMAGE                                      COMMAND                  CREATED          STATUS                            PORTS                                                                                    NAMES
+89f628aab077   ubuntu:22.10                               "/bin/bash"              8 minutes ago    Exited (127) About a minute ago                                                                                            gb-test
+6f6de2961b3a   6b362a9f73eb                               "cowsay -f elephant …"   30 minutes ago   Exited (0) 30 minutes ago                                                                                                  nostalgic_dhawan
+92d25eaed38e   6b362a9f73eb                               "cowsay Hello,Docker!"   39 minutes ago   Exited (0) 39 minutes ago                                                                                                  jolly_burnell
+7f68677478f1   git.ovita.ru:5050/web/ovita.ru/php:7.4-9   "docker-php-entrypoi…"   3 weeks ago      Up 2 hours                        9000/tcp                                                                                 ovitaru-app-1
+597ab12e7276   mcuadros/ofelia:v0.3.7                     "/usr/bin/ofelia dae…"   3 weeks ago      Up 2 hours                                                                                                                 ovitaru-crontab-1
+137cfb28fa2a   macbre/sphinxsearch:3.4.1                  "/bin/sh -c 'searchd…"   3 weeks ago      Up 2 hours                        36307/tcp                                                                                ovitaru-sphinx-1
+b7f33b9718b8   nginx:1.23-alpine                          "/docker-entrypoint.…"   3 weeks ago      Up 2 hours                        80/tcp                                                                                   ovitaru-nginx-1
+6337e0f064b1   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                        11211/tcp                                                                                ovitaru-memcached-sms-1
+d58d4db47853   getmeili/meilisearch:v1.3.2                "tini -- /bin/sh -c …"   3 weeks ago      Up 2 hours                        7700/tcp                                                                                 ovitaru-meilisearch-1
+d8d8d33957e3   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                        11211/tcp                                                                                ovitaru-memcached-1
+d1d835b48fc7   dockage/mailcatcher:0.8.2                  "entrypoint --smtp-p…"   3 weeks ago      Up 2 hours                        1025/tcp, 1080/tcp                                                                       ovitaru-mailer-1
+70b5b2d21a52   mysql:8.0-oracle                           "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                        3306/tcp, 33060/tcp                                                                      ovitaru-mysql-1
+d2a5ae710f07   traefik:v2.10                              "/entrypoint.sh --lo…"   3 weeks ago      Up 2 hours                        0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:5671->5671/tcp, 0.0.0.0:443->443/udp   traefik-local-traefik-1
+svetasame@of-ecom01:~$ docker start gb-test
+gb-test
+svetasame@of-ecom01:~$ docker exec gb-test
+"docker exec" requires at least 2 arguments.
+See 'docker exec --help'.
+
+Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+Execute a command in a running container
+svetasame@of-ecom01:~$ docker exec -it gb-test bash
+root@GB:/# ls
+bin  boot  dev  etc  example  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@GB:/# cd /example
+root@GB:/example# ll
+total 12
+drwxr-xr-x 2 root root 4096 Oct  9 06:55 ./
+drwxr-xr-x 1 root root 4096 Oct  9 06:54 ../
+-rw-r--r-- 1 root root    8 Oct  9 06:56 passwords.txt
+root@GB:/example# exit
+exit
+svetasame@of-ecom01:~$ mkdir /test
+mkdir: cannot create directory ‘/test’: Permission denied
+svetasame@of-ecom01:~$ mkdir test
+svetasame@of-ecom01:~$ cd test
+svetasame@of-ecom01:~/test$ mkdir folder
+svetasame@of-ecom01:~/test$ ls
+folder
+svetasame@of-ecom01:~/test$ cd ..
+svetasame@of-ecom01:~$ docker rut -it -h GB --name gb-test-2 -v test/folder:/otherway ubuntu:22.10
+unknown shorthand flag: 'i' in -it
+See 'docker --help'.
+
+Usage:  docker [OPTIONS] COMMAND
+
+A self-sufficient runtime for containers
+
+Common Commands:
+  run         Create and run a new container from an image
+  exec        Execute a command in a running container
+  ps          List containers
+  build       Build an image from a Dockerfile
+  pull        Download an image from a registry
+  push        Upload an image to a registry
+  images      List images
+  login       Log in to a registry
+  logout      Log out from a registry
+  search      Search Docker Hub for images
+  version     Show the Docker version information
+  info        Display system-wide information
+
+Management Commands:
+  builder     Manage builds
+  buildx*     Docker Buildx (Docker Inc., v0.11.2-desktop.1)
+  compose*    Docker Compose (Docker Inc., v2.20.2-desktop.1)
+  container   Manage containers
+  context     Manage contexts
+  dev*        Docker Dev Environments (Docker Inc., v0.1.0)
+  extension*  Manages Docker extensions (Docker Inc., v0.2.20)
+  image       Manage images
+  init*       Creates Docker-related starter files for your project (Docker Inc., v0.1.0-beta.6)
+  manifest    Manage Docker image manifests and manifest lists
+  network     Manage networks
+  plugin      Manage plugins
+  sbom*       View the packaged-based Software Bill Of Materials (SBOM) for an image (Anchore Inc., 0.6.0)
+  scan*       Docker Scan (Docker Inc., v0.26.0)
+  scout*      Command line tool for Docker Scout (Docker Inc., 0.20.0)
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Swarm Commands:
+  swarm       Manage Swarm
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+
+Global Options:
+      --config string      Location of client config files (default "/home/svetasame/.docker")
+  -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with "docker context use")
+  -D, --debug              Enable debug mode
+  -H, --host list          Daemon socket to connect to
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/home/svetasame/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/home/svetasame/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/home/svetasame/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Run 'docker COMMAND --help' for more information on a command.
+
+For more help on how to use Docker, head to https://docs.docker.com/go/guides/
+
+svetasame@of-ecom01:~$ docker run -it -h GB --name gb-test-2 -v test/folder:/otherway ubuntu:22.10
+docker: Error response from daemon: create test/folder: "test/folder" includes invalid characters for a local volume name, only "[a-zA-Z0-9][a-zA-Z0-9_.-]" are allowed. If you intended to pass a host directory, use absolute path.
+See 'docker run --help'.
+svetasame@of-ecom01:~$ sudo mkdir /test
+[sudo] password for svetasame:
+svetasame@of-ecom01:~$ cd /test
+svetasame@of-ecom01:/test$ mkdir folder
+mkdir: cannot create directory ‘folder’: Permission denied
+svetasame@of-ecom01:/test$ mkdir /folder
+mkdir: cannot create directory ‘/folder’: Permission denied
+svetasame@of-ecom01:/test$ docker run -it -h GB --name gb-test-2 -v /test/folder:/otherway ubuntu:22.10
+root@GB:/# ls /
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  otherway  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@GB:/# cd otherway/
+root@GB:/otherway# touch passwords.txt
+root@GB:/otherway# ls
+passwords.txt
+root@GB:/otherway# echo "321test" >> passwords.txt
+root@GB:/otherway# cat passwords.txt
+321test
+root@GB:/otherway# exit
+exit
+svetasame@of-ecom01:/test$ cd test/folder
+bash: cd: test/folder: No such file or directory
+svetasame@of-ecom01:/test$ nano pass1.txt
+svetasame@of-ecom01:/test$ sudo nano pass1.txt
+svetasame@of-ecom01:/test$ cat pass
+cat: pass: No such file or directory
+svetasame@of-ecom01:/test$ cat pass1.txt
+dvwefg
+e
+wegvwegwe
+svetasame@of-ecom01:/test$ docker exec -it gb-test-2 bash
+Error response from daemon: Container d47fbba97dd44152ac8ad0533417f61a9a1e939b63199c50613714634c3dcaed is not running
+svetasame@of-ecom01:/test$ docker start gb-test-2
+gb-test-2
+svetasame@of-ecom01:/test$ docker exec -it gb-test-2 bash
+root@GB:/# cd otherway
+root@GB:/otherway# ls
+passwords.txt
+root@GB:/otherway# exit
+exit
+svetasame@of-ecom01:/test$ ls
+folder  pass1.txt
+svetasame@of-ecom01:/test$ cd folder/
+svetasame@of-ecom01:/test/folder$ docker ps -a
+CONTAINER ID   IMAGE                                      COMMAND                  CREATED          STATUS                      PORTS                                                                                    NAMES
+d47fbba97dd4   ubuntu:22.10                               "/bin/bash"              4 minutes ago    Up 59 seconds                                                                                                        gb-test-2
+89f628aab077   ubuntu:22.10                               "/bin/bash"              23 minutes ago   Up 14 minutes                                                                                                        gb-test
+6f6de2961b3a   6b362a9f73eb                               "cowsay -f elephant …"   45 minutes ago   Exited (0) 45 minutes ago                                                                                            nostalgic_dhawan
+92d25eaed38e   6b362a9f73eb                               "cowsay Hello,Docker!"   54 minutes ago   Exited (0) 54 minutes ago                                                                                            jolly_burnell
+7f68677478f1   git.ovita.ru:5050/web/ovita.ru/php:7.4-9   "docker-php-entrypoi…"   3 weeks ago      Up 2 hours                  9000/tcp                                                                                 ovitaru-app-1
+597ab12e7276   mcuadros/ofelia:v0.3.7                     "/usr/bin/ofelia dae…"   3 weeks ago      Up 2 hours                                                                                                           ovitaru-crontab-1
+137cfb28fa2a   macbre/sphinxsearch:3.4.1                  "/bin/sh -c 'searchd…"   3 weeks ago      Up 2 hours                  36307/tcp                                                                                ovitaru-sphinx-1
+b7f33b9718b8   nginx:1.23-alpine                          "/docker-entrypoint.…"   3 weeks ago      Up 2 hours                  80/tcp                                                                                   ovitaru-nginx-1
+6337e0f064b1   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                  11211/tcp                                                                                ovitaru-memcached-sms-1
+d58d4db47853   getmeili/meilisearch:v1.3.2                "tini -- /bin/sh -c …"   3 weeks ago      Up 2 hours                  7700/tcp                                                                                 ovitaru-meilisearch-1
+d8d8d33957e3   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                  11211/tcp                                                                                ovitaru-memcached-1
+d1d835b48fc7   dockage/mailcatcher:0.8.2                  "entrypoint --smtp-p…"   3 weeks ago      Up 2 hours                  1025/tcp, 1080/tcp                                                                       ovitaru-mailer-1
+70b5b2d21a52   mysql:8.0-oracle                           "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                  3306/tcp, 33060/tcp                                                                      ovitaru-mysql-1
+d2a5ae710f07   traefik:v2.10                              "/entrypoint.sh --lo…"   3 weeks ago      Up 2 hours                  0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:5671->5671/tcp, 0.0.0.0:443->443/udp   traefik-local-traefik-1
+svetasame@of-ecom01:/test/folder$ docker rm d47fbba97dd4 --force
+d47fbba97dd4
+svetasame@of-ecom01:/test/folder$ docker ps -a
+CONTAINER ID   IMAGE                                      COMMAND                  CREATED          STATUS                      PORTS                                                                                    NAMES
+89f628aab077   ubuntu:22.10                               "/bin/bash"              24 minutes ago   Up 15 minutes                                                                                                        gb-test
+6f6de2961b3a   6b362a9f73eb                               "cowsay -f elephant …"   46 minutes ago   Exited (0) 46 minutes ago                                                                                            nostalgic_dhawan
+92d25eaed38e   6b362a9f73eb                               "cowsay Hello,Docker!"   55 minutes ago   Exited (0) 55 minutes ago                                                                                            jolly_burnell
+7f68677478f1   git.ovita.ru:5050/web/ovita.ru/php:7.4-9   "docker-php-entrypoi…"   3 weeks ago      Up 2 hours                  9000/tcp                                                                                 ovitaru-app-1
+597ab12e7276   mcuadros/ofelia:v0.3.7                     "/usr/bin/ofelia dae…"   3 weeks ago      Up 2 hours                                                                                                           ovitaru-crontab-1
+137cfb28fa2a   macbre/sphinxsearch:3.4.1                  "/bin/sh -c 'searchd…"   3 weeks ago      Up 2 hours                  36307/tcp                                                                                ovitaru-sphinx-1
+b7f33b9718b8   nginx:1.23-alpine                          "/docker-entrypoint.…"   3 weeks ago      Up 2 hours                  80/tcp                                                                                   ovitaru-nginx-1
+6337e0f064b1   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                  11211/tcp                                                                                ovitaru-memcached-sms-1
+d58d4db47853   getmeili/meilisearch:v1.3.2                "tini -- /bin/sh -c …"   3 weeks ago      Up 2 hours                  7700/tcp                                                                                 ovitaru-meilisearch-1
+d8d8d33957e3   memcached:1.6-alpine                       "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                  11211/tcp                                                                                ovitaru-memcached-1
+d1d835b48fc7   dockage/mailcatcher:0.8.2                  "entrypoint --smtp-p…"   3 weeks ago      Up 2 hours                  1025/tcp, 1080/tcp                                                                       ovitaru-mailer-1
+70b5b2d21a52   mysql:8.0-oracle                           "docker-entrypoint.s…"   3 weeks ago      Up 2 hours                  3306/tcp, 33060/tcp                                                                      ovitaru-mysql-1
+d2a5ae710f07   traefik:v2.10                              "/entrypoint.sh --lo…"   3 weeks ago      Up 2 hours                  0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:5671->5671/tcp, 0.0.0.0:443->443/udp   traefik-local-traefik-1
+svetasame@of-ecom01:/test/folder$ docker run -it -h GB --name gb-test-2 -v /test/folder:/otherway ubuntu:22.10
+root@GB:/# ls /
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  otherway  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@GB:/# cd otherway
+root@GB:/otherway# ls
+passwords.txt
+root@GB:/otherway# echo "$HOSTNAME" >> passwords.txt
+root@GB:/otherway# cat passwords.txt
+321test
+GB
+root@GB:/otherway# exit
+exit
+svetasame@of-ecom01:/test/folder$ ls
+passwords.txt
+svetasame@of-ecom01:/test/folder$ cat passwords.txt
+321test
+GB
+svetasame@of-ecom01:/test/folder$ cd ..
+svetasame@of-ecom01:/test$ cat pass1.txt
+dvwefg
+e
+wegvwegwe
+svetasame@of-ecom01:/test$ cd folder
+svetasame@of-ecom01:/test/folder$ ls
+passwords.txt
+svetasame@of-ecom01:/test/folder$ nano passwords.txt
+svetasame@of-ecom01:/test/folder$ sudo nano passwords.txt
+svetasame@of-ecom01:/test/folder$ docker start gb-test-2
+gb-test-2
+svetasame@of-ecom01:/test/folder$ docker run -it -h GB --name gb-test-2 -v /test/folder:/otherway ubuntu:22.10
+docker: Error response from daemon: Conflict. The container name "/gb-test-2" is already in use by container "2080ae9d3cf57fd28a4c4e813164a33ab002794eb14e37f51995fab817c4e426". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+svetasame@of-ecom01:/test/folder$ docker exec -it gb-test-2 bash
+root@GB:/# cd otherway/
+root@GB:/otherway# ls
+passwords.txt
+root@GB:/otherway# cat passwords.txt
+321test
+GB
+svetasame
+root@GB:/otherway# exit
+exit
+svetasame@of-ecom01:/test/folder$
